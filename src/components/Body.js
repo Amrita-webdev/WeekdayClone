@@ -4,17 +4,31 @@ import { Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, sagaActions } from '../redux/reducer'
 import Api from '../redux/Api';
+import { withStyles } from '@mui/styles';
+import CircularProgress from '@mui/material/CircularProgress';
 
-const Body = () => {
+
+const style= {
+    bodyContent: {
+        padding: '24px',
+        scrollBehaviour: 'smooth'
+    },
+    loading: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+}
+const Body = ({classes}) => {
     const dispatch = useDispatch()
-    const {loading, hasMore, page} = useSelector((state) => state.jobs)
+    const {loading, page} = useSelector((state) => state.jobs)
     const [jobs, setJobs] = useState([])
 
     const elementRef = useRef(null)
 
     const onIntersection = (entries) => {
         const firstEntry = entries[0]
-        if(firstEntry.isIntersecting && hasMore){
+        if(firstEntry.isIntersecting && loading){
             fetchMoreJobs()
         }
     }
@@ -34,17 +48,16 @@ const Body = () => {
         //fetch next jobs
         const response = await Api.getJobs({"limit":10, "offset": page*10})
         if(response.data.jdList.length === 0) {
-            dispatch(actions.setHasMore(false))
+            dispatch(actions.setLoading(false))
         } else{
-            console.log(response)
             setJobs(prevJobs => [...prevJobs, ...response.data.jdList])
-            dispatch(actions.setPage(prevPage => prevPage+1))
+            dispatch(actions.setPage(page+1))
         }
     }
 
   return (
     <>
-    <Grid container spacing={4} style={{padding: '24px'}}>
+    <Grid container spacing={4} className={classes.bodyContent}>
         {jobs.map((job, index) => (
             <Grid item xs={12} md={4} sm={6} key={index}>
                 <JobCard job={job}/>
@@ -52,10 +65,10 @@ const Body = () => {
         ))}
     </Grid>
         {
-            hasMore && <div ref={elementRef}>Load more..</div>
+            loading && <div ref={elementRef} className={classes.loading}> <CircularProgress /> </div>
         }
     </>
   )
 }
 
-export default Body
+export default withStyles(style)(Body)

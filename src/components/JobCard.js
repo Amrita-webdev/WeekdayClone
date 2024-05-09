@@ -5,9 +5,37 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { Stack } from '@mui/material';
-import { withStyles, useStyles } from '@mui/material';
+import { withStyles } from '@mui/styles';
 
-const JobCard = ({job}) => {
+const style={
+  cardStyle: {
+    borderRadius: '20px', maxHeight: '100%', height: '500px', maxWidth: '360px', position: 'relative'
+  },
+  contentDiv: {
+    display: 'flex', gap: '0.5rem'
+  },
+  image: {
+    width: '25px', height: '25px', borderRadius: '50%'
+  },
+  compayName: {
+    fontSize: '13px', fontWeight: 600, letterSpacing: '1px', marginBottom: '3px', color: '#8b8b8b'
+  },
+  jobRole: {
+    fontSize: '14px', lineHeight: 1.5
+  },
+  location: {
+    fontSize: '11px', fontWeight: 500, marginTop: '5px', marginBottom: 0
+  },
+  salary: {
+    margin: '8px 0', fontSize: '14px', fontWeight: 400, color: '#4D596A', lineHeight: 1.43
+  },
+  warning: {
+    height: '14px', marginLeft: '0.45rem'
+  }
+
+}
+
+const JobCard = ({classes, job}) => {
   const [openModal, setOpenModal] = useState(false)
   const [isTruncated, setIsTruncated] = useState(false)
   const handleClick = () => {
@@ -22,23 +50,23 @@ const JobCard = ({job}) => {
   const maxLength = 550
   const fadeLength = text.length - maxLength
   return (
-    <Card style={{borderRadius: '20px', maxHeight: '100%', height: '500px', maxWidth: '360px', position: 'relative'}}>
+    <Card className={classes.cardStyle}>
       <CardContent>
-        <div style={{display: 'flex', gap: '0.5rem'}}>
-            <img src={job.logoUrl} alt="logo" style={{width: '25px', height: '25px', borderRadius: '50%'}}/>
+        <div className={classes.contentDiv}>
+            <img src={job.logoUrl} alt="logo" className={classes.image}/>
           <div>
             <div>
-              <h3 style={{fontSize: '13px', fontWeight: 600, letterSpacing: '1px', marginBottom: '3px', color: '#8b8b8b'}}>{job.companyName}</h3>
-              <h2 style={{fontSize: '14px', lineHeight: 1.5}}>{job.jobRole}</h2>
+              <h3 className={classes.companyName}>{job.companyName}</h3>
+              <h2 className={classes.jobRole}>{job.jobRole}</h2>
             </div>
-            <p style={{fontSize: '11px', fontWeight: 500, marginTop: '5px', marginBottom: 0}}>{job.location}</p>
+            <p className={classes.location}>{job.location}</p>
           </div>
         </div>
         <div>
-          <p style={{margin: '8px 0', fontSize: '14px', fontWeight: 400, color: '#4D596A', lineHeight: 1.43}}>
+          <p className={classes.salary}>
             Estimated Salary:
             {job.minJdSalary !== null && job.salaryCurrencyCode==='USD' ? '$' : ''}{job.minJdSalary !== null ? job.minJdSalary : ''} {job.minJdSalary !== null && '-'} {job.salaryCurrencyCode ? '$' : ''}{job.maxJdSalary} LPA
-            <span><img style={{height: '14px', marginLeft: '0.45rem'}} aria-label="Estimated by Weekday. Not provided by employer" src="https://fonts.gstatic.com/s/e/notoemoji/15.0/26a0_fe0f/32.png" alt='warning'/></span>
+            <span><img className={classes.warning} aria-label="Estimated by Weekday. Not provided by employer" src="https://fonts.gstatic.com/s/e/notoemoji/15.0/26a0_fe0f/32.png" alt='warning'/></span>
           </p>
         </div>
         <div style={{position: 'relative'}}>
@@ -66,4 +94,4 @@ const JobCard = ({job}) => {
   )
 }
 
-export default JobCard
+export default withStyles(style)(JobCard)

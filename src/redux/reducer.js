@@ -1,15 +1,11 @@
 import { createSlice, createAction } from '@reduxjs/toolkit'
 import { call, all, put } from 'redux-saga/effects'
-import { takeEvery, takeLatest } from 'redux-saga/effects'
-import Api from './Api'
 
 const prefix = 'jobs'
 
 export const initialState = {
-    loading: false,
+    loading: true,
     jobs: [],
-    job: {},
-    hasMore: true,
     page: 0
 }
 
@@ -22,12 +18,6 @@ const jobsSlice = createSlice ({
         },
         setJobs(state, action){
             state.jobs = action.payload
-        },
-        setJob(state, action){
-            state.job = action.payload
-        },
-        setHasMore(state, action){
-            state.hasMore = action.payload
         },
         setPage(state, action){
             state.page = action.payload

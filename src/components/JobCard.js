@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -7,37 +7,37 @@ import Button from '@mui/material/Button';
 import { Stack } from '@mui/material';
 import { withStyles, useStyles } from '@mui/material';
 
-const JobCard = () => {
+const JobCard = ({job}) => {
   const [openModal, setOpenModal] = useState(false)
-  const [isTruncated, setIsTruncated] = useState(true)
+  const [isTruncated, setIsTruncated] = useState(false)
   const handleClick = () => {
       setOpenModal(true)
   }
+  const text = job.jobDetailsFromCompany
 
-  const text = "This is a sample job and you must have displayed it to understand that its not just some random lorem ipsum text but something which was manually written. Oh well, if random text is what you were looking for then here it is: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages and now in this assignment."
-  const toggleTruncated = () => {
-    if(text.length > 500)setIsTruncated(!isTruncated)
-  }
-  console.log(text.length)
+  useEffect(() => {
+    if(text.length > 500) setIsTruncated(true)
+  }, [isTruncated])
+
   const maxLength = 550
   const fadeLength = text.length - maxLength
   return (
     <Card style={{borderRadius: '20px', maxHeight: '100%', height: '500px', maxWidth: '360px', position: 'relative'}}>
       <CardContent>
         <div style={{display: 'flex', gap: '0.5rem'}}>
-            <img src="https://logo.clearbit.com/dropbox.com" alt="logo" style={{width: '25px', height: '25px', borderRadius: '50%'}}/>
+            <img src={job.logoUrl} alt="logo" style={{width: '25px', height: '25px', borderRadius: '50%'}}/>
           <div>
             <div>
-              <h3 style={{fontSize: '13px', fontWeight: 600, letterSpacing: '1px', marginBottom: '3px', color: '#8b8b8b'}}>Builder.ai</h3>
-              <h2 style={{fontSize: '14px', lineHeight: 1.5}}>UI Developer</h2>
+              <h3 style={{fontSize: '13px', fontWeight: 600, letterSpacing: '1px', marginBottom: '3px', color: '#8b8b8b'}}>{job.companyName}</h3>
+              <h2 style={{fontSize: '14px', lineHeight: 1.5}}>{job.jobRole}</h2>
             </div>
-            <p style={{fontSize: '11px', fontWeight: 500, marginTop: '5px', marginBottom: 0}}>Gurugram</p>
+            <p style={{fontSize: '11px', fontWeight: 500, marginTop: '5px', marginBottom: 0}}>{job.location}</p>
           </div>
         </div>
         <div>
           <p style={{margin: '8px 0', fontSize: '14px', fontWeight: 400, color: '#4D596A', lineHeight: 1.43}}>
             Estimated Salary:
-            $12 - $14 LPA
+            {job.minJdSalary !== null && job.salaryCurrencyCode==='USD' ? '$' : ''}{job.minJdSalary !== null ? job.minJdSalary : ''} {job.minJdSalary !== null && '-'} {job.salaryCurrencyCode ? '$' : ''}{job.maxJdSalary} LPA
             <span><img style={{height: '14px', marginLeft: '0.45rem'}} aria-label="Estimated by Weekday. Not provided by employer" src="https://fonts.gstatic.com/s/e/notoemoji/15.0/26a0_fe0f/32.png" alt='warning'/></span>
           </p>
         </div>
@@ -55,7 +55,7 @@ const JobCard = () => {
         </div>
         <div style={{marginTop: '30px'}}>
           <h3 style={{fontSize: '13px', fontWeight: 600, letterSpacing: '1px', marginBottom: '3px', color: '#8b8b8b'}}>Minimum Experience</h3>
-          <h2 style={{fontSize: '14px', lineHeight: 1.5, fontWeight: 400, color: '#000000de'}}>2 years</h2>
+          <h2 style={{fontSize: '14px', lineHeight: 1.5, fontWeight: 400, color: '#000000de'}}>{job.minExp} years</h2>
       </div>
       </CardContent>
       <div style={{display: 'grid', padding: '8px 16px', gap: '0.5rem', position: 'absolute', bottom: 0, left: 0, right: 0, maxWidth: '100%'}}>

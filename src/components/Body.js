@@ -16,7 +16,8 @@ const style= {
     loading: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        margin: '0.5rem 0'
     }
 }
 const Body = ({classes}) => {
@@ -25,11 +26,21 @@ const Body = ({classes}) => {
     const [jobs, setJobs] = useState([])
 
     const elementRef = useRef(null)
+    const fetchTimeOut = useRef(null)
+
+    const fetchThrottledMoreJobs = () => {
+        if(!fetchTimeOut.current){
+            fetchTimeOut.current = setTimeout(() => {
+                fetchMoreJobs()
+                fetchTimeOut.current = null
+            }, 500)
+        }
+    }
 
     const onIntersection = (entries) => {
         const firstEntry = entries[0]
         if(firstEntry.isIntersecting && loading){
-            fetchMoreJobs()
+            fetchThrottledMoreJobs()
         }
     }
     useEffect(() => {
@@ -46,11 +57,11 @@ const Body = ({classes}) => {
 
     async function fetchMoreJobs(){
         //fetch next jobs
-        const response = await Api.getJobs({"limit":10, "offset": page*10})
-        if(response.data.jdList.length === 0) {
+        const response = await Api.getJobs({"limit":12, "offset": page*12})
+        if(response?.data?.jdList?.length === 0) {
             dispatch(actions.setLoading(false))
         } else{
-            setJobs(prevJobs => [...prevJobs, ...response.data.jdList])
+            setJobs(prevJobs => [...prevJobs, ...response?.data?.jdList])
             dispatch(actions.setPage(page+1))
         }
     }

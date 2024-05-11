@@ -5,7 +5,9 @@ import { withStyles } from '@mui/styles';
 
 const style={
   cardStyle: {
-    borderRadius: '20px', maxHeight: '100%', height: '500px', maxWidth: '360px', position: 'relative'
+    borderRadius: '20px !important', maxHeight: '100%', height: '500px', maxWidth: '360px', position: 'relative', transition: 'transform 3s', '&:hover': {
+      transform: 'scale(1.01)'
+  }
   },
   contentDiv: {
     display: 'flex', gap: '0.5rem'
@@ -80,7 +82,7 @@ const JobCard = ({classes, job}) => {
       setOpenModal(true)
   }
   const text = job?.jobDetailsFromCompany
-  
+
   useEffect(() => {
     if(text.length > 400) setIsTruncated(true)
   }, [isTruncated])
@@ -110,7 +112,7 @@ const JobCard = ({classes, job}) => {
         <div className={classes.textBoxContainer}>
           <div className={classes.textBoxContent}>
             <p className={classes.textBox}>About Role:</p>
-            { isTruncated ? (<div style={{whiteSpace: 'pre-wrap', fontSize: '14px', opacity: isTruncated ? 0.5 : 1}}>{text.slice(0, maxLength).split('').map((char, index) => (
+            { isTruncated ? (<div style={{whiteSpace: 'pre-wrap', fontSize: '14px', color: '#000000de', opacity: isTruncated ? 0.5 : 1}}>{text.slice(0, maxLength).split('').map((char, index) => (
               <span key={index} style={{opacity: index < fadeLength ? 1 : 0.5 - (index - fadeLength) / fadeLength / 2}}>{char}</span>))}</div>) : <div>{text}{text.length > maxLength+fadeLength && (
                 <span style={{opacity: 0.5}}>{text.slice(maxLength, maxLength+fadeLength)}</span>
               )}</div>}
